@@ -9,8 +9,8 @@ import (
 
 const (
 	_addReplySQL      = "INSERT INTO reply_%s (source_id,type_id,comment,parent_id,path)VALUES(?,?,?,?,?)"
-	_selLimitReplySQL = "SELECT id,type_id,source_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESCl LIMIT 0,100"
-	_selAllReplySQL   = "SELECT id,type_id,source_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=?"
+	_selLimitReplySQL = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESC LIMIT 0,100"
+	_selAllReplySQL   = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=?"
 )
 
 func (d *Dao) sharding(id int64) string {
@@ -27,14 +27,14 @@ func (d *Dao) AddReply(c context.Context, reply *model.Reply) (affected int64, e
 }
 
 func (d *Dao) SelLimitReply(c context.Context, sourceId int64, typeId int8) (rs []*model.Reply, err error) {
-	rows, err := d.db.Query(c, fmt.Sprint(_selLimitReplySQL, d.sharding(sourceId)), sourceId, typeId)
+	rows, err := d.db.Query(c, fmt.Sprintf(_selLimitReplySQL, d.sharding(sourceId)), sourceId, typeId)
 	if err != nil {
 		log.Error("d.db.Query(%d,%d) error(%v)", sourceId, typeId, err)
 		return
 	}
 	for rows.Next() {
 		r := &model.Reply{}
-		if err = rows.Scan(); err != nil {
+		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
 			log.Error("SelLimitReply(%d,%d) rows.Scan error(%v)", sourceId, typeId, err)
 			return
 		}
@@ -44,14 +44,14 @@ func (d *Dao) SelLimitReply(c context.Context, sourceId int64, typeId int8) (rs 
 }
 
 func (d *Dao) SelAllReply(c context.Context, sourceId int64, typeId int8) (rs []*model.Reply, err error) {
-	rows, err := d.db.Query(c, fmt.Sprint(_selAllReplySQL, d.sharding(sourceId)), sourceId, typeId)
+	rows, err := d.db.Query(c, fmt.Sprintf(_selAllReplySQL, d.sharding(sourceId)), sourceId, typeId)
 	if err != nil {
 		log.Error("d.db.Query(%d,%d) error(%v)", sourceId, typeId, err)
 		return
 	}
 	for rows.Next() {
 		r := &model.Reply{}
-		if err = rows.Scan(); err != nil {
+		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
 			log.Error("rows.Scan(%d,%d) rows.Scan error(%v)", sourceId, typeId, err)
 			return
 		}
