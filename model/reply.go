@@ -4,6 +4,10 @@ import (
 	"kit/time"
 )
 
+const (
+	NOTE_TYPE int8 = 0
+)
+
 type Reply struct {
 	Id       int64     `json:"id"`
 	SourceId int64     `json:"source_id"`

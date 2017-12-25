@@ -38,6 +38,8 @@ func init() {
 	// get config Path
 	if _, err := toml.DecodeFile(*ConfPath, &Conf); err != nil {
 		log.Error("toml.DecodeFile error(%v)", err)
-		panic(err)
+		if _, err := toml.DecodeFile("."+*ConfPath, &Conf); err != nil {
+			panic(err)
+		}
 	}
 }

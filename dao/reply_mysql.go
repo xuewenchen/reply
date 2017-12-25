@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	_addReplySQL      = "INSERT INTO reply_%s (type_id,source_id,comment,parent_id,path)VALUES(?,?,?,?,?)"
+	_addReplySQL      = "INSERT INTO reply_%s (source_id,type_id,comment,parent_id,path)VALUES(?,?,?,?,?)"
 	_selLimitReplySQL = "SELECT id,type_id,source_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESCl LIMIT 0,100"
 	_selAllReplySQL   = "SELECT id,type_id,source_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=?"
 )
@@ -18,7 +18,7 @@ func (d *Dao) sharding(id int64) string {
 }
 
 func (d *Dao) AddReply(c context.Context, reply *model.Reply) (affected int64, err error) {
-	result, err := d.db.Exec(c, fmt.Sprint(_addReplySQL, d.sharding(reply.SourceId)), reply.TypeId, reply.SourceId, reply.Comment, reply.ParentId, reply.Path)
+	result, err := d.db.Exec(c, fmt.Sprintf(_addReplySQL, d.sharding(reply.SourceId)), reply.SourceId, reply.TypeId, reply.Comment, reply.ParentId, reply.Path)
 	if err != nil {
 		log.Error("d.db.Exec(%+v) error(%v)", reply, err)
 		return
