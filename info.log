@@ -1,0 +1,12 @@
+
+[2017/12/21 15:45:30 CST] [INFO] [main.main:22] service start
+[2017/12/21 15:45:30 CST] [INFO] [kit/example/service.runRpc:102] RunRpc success port:8001
+[2017/12/21 15:45:30 CST] [INFO] [kit/example/service.runHttp:132] RunInnerHttp success port:8002
+[2017/12/21 15:45:30 CST] [INFO] [kit/example/service.runHttp:143] RunOutterHttp success port:8003
+[2017/12/21 15:45:50 CST] [INFO] [main.main:34] service end receive signal interrupt
+[2017/12/21 16:57:31 CST] [INFO] [main.main:22] service start
+[2017/12/21 16:57:31 CST] [INFO] [kit/net/pprof.Init:20] pprof success port:8000
+[2017/12/21 16:57:31 CST] [INFO] [kit/example/service.runHttp:139] RunInnerHttp success port:8002
+[2017/12/21 16:57:31 CST] [INFO] [kit/example/service.runHttp:150] RunOutterHttp success port:8003
+[2017/12/21 16:57:31 CST] [INFO] [kit/example/service.runRpc:109] RunRpc success port:8004
+[2017/12/21 16:57:55 CST] [INFO] [main.main:34] service end receive signal interrupt

@@ -1,0 +1,68 @@
+[common]
+version = "1.0.0"
+env = "local"
+hostPort = "127.0.0.1:61001"
+family = "hello_service"
+
+[log]
+dir = "./"
+
+[trace]
+addr = "http://127.0.0.1:9411/api/v1/spans"
+debug = false
+sameSpan = true
+traceID128Bit = true
+
+[mhttp]
+    [mhttp.pprof]
+        port = 8000
+        readTimeout = "1s"
+        writeTimeout = "1s" 
+    [mhttp.inner]
+        port = 8002
+        readTimeout = "1s"
+        writeTimeout = "1s"
+    [mhttp.outter]
+        port = 8003
+        readTimeout = "100s"
+        writeTimeout = "100s"
+
+[grpc]
+    name = "hello_service"
+    addr = "0.0.0.1"
+    port = 8004
+    etcdAddr = "http://127.0.0.1:2379"
+
+
+[mysql]
+    addr = "127.0.0.1"
+    dsn = "root:@tcp(127.0.0.1:3306)/reply?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
+    active = 2
+    idle = 2
+
+[redis]
+    name = "reply"
+    proto = "tcp"
+    addr = "127.0.0.1:6379"
+    idle = 10
+    active = 10
+    dialTimeout = "500ms"
+    readTimeout = "1s"
+    writeTimeout = "1s"
+    idleTimeout = "80s"
+
+[memcache]
+    name = "reply"
+    proto = "tcp"
+    addr = "127.0.01:11211"
+    idle = 10
+    active = 10
+    dialTimeout = "2s"
+    readTimeout = "2s"
+    writeTimeout = "2s"
+    idleTimeout = "7h"
+
+[reply]
+expireRedis="72h"
+expireMc="8h"
+
