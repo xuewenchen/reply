@@ -12,10 +12,14 @@ const (
 	_replyIndexKey = "rs_%d_%d" // sourceId_typeId
 )
 
+func (d *Dao) replyIndexKey(sourceId int64, typeId int8) string {
+	return fmt.Sprintf(_replyIndexKey, sourceId, typeId)
+}
+
 func (d *Dao) ExpireReplyRedis(c context.Context, sourceId int64, typeId int8) (err error) {
 	conn := d.redis.Get(c)
 	defer conn.Close()
-	key := fmt.Sprintf(_replyIndexKey, sourceId, typeId)
+	key := d.replyIndexKey(sourceId, typeId)
 	if _, err = conn.Do(key, d.expireRedis); err != nil {
 		log.Error("ExpireReplyRedis(%s) error(%v)", key, err)
 	}
@@ -25,7 +29,7 @@ func (d *Dao) ExpireReplyRedis(c context.Context, sourceId int64, typeId int8) (
 func (d *Dao) AddReplyRedis(c context.Context, sourceId int64, typeId int8, rs []*model.Reply) (err error) {
 	conn := d.redis.Get(c)
 	defer conn.Close()
-	key := fmt.Sprintf(_replyIndexKey, sourceId, typeId)
+	key := d.replyIndexKey(sourceId, typeId)
 	for _, r := range rs {
 		if err = conn.Send("ZADD", key, r.Created.Time().Unix(), r.Id); err != nil {
 			log.Error("conn.Send(ZADD %s, %d, %d) error(%v)", key, r.Created.Time().Unix(), r.Id, err)
@@ -52,7 +56,7 @@ func (d *Dao) AddReplyRedis(c context.Context, sourceId int64, typeId int8, rs [
 func (d *Dao) ListReplyRedis(c context.Context, sourceId int64, typeId int8, start, end int) (ids []int64, count int, err error) {
 	conn := d.redis.Get(c)
 	defer conn.Close()
-	key := fmt.Sprintf(_replyIndexKey, sourceId, typeId)
+	key := d.replyIndexKey(sourceId, typeId)
 	if err = conn.Send("ZREVRANGE", key, start, end); err != nil {
 		log.Error("conn.Send(ZREVRANGE %s, %d, %d) error(%v)", key, start, end, err)
 		return
