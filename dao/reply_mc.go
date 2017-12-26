@@ -35,13 +35,13 @@ func (d *Dao) AddReplysMc(c context.Context, sourceId int64, typeId int8, rs []*
 	return
 }
 
-func (d *Dao) GetReplyMc(c context.Context, sourceId, ReplyId int64, typeId int8) (reply *model.Reply, err error) {
+func (d *Dao) GetReplyMc(c context.Context, sourceId, id int64, typeId int8) (reply *model.Reply, err error) {
 	conn := d.mc.Get(c)
 	defer conn.Close()
-	key := d.mcKey(sourceId, ReplyId, typeId)
+	key := d.mcKey(sourceId, id, typeId)
 	err = conn.Get("get", func(r *memcache.Reply) {
 		reply = &model.Reply{}
-		if err := json.Unmarshal(r.Value, r); err != nil {
+		if err = json.Unmarshal(r.Value, reply); err != nil {
 			log.Error("json.Unmarshal(%v) error(%v)", r.Value, err)
 			return
 		}

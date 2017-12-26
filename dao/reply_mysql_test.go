@@ -2,22 +2,9 @@ package dao
 
 import (
 	"context"
-	"os"
-	"reply/config"
 	"reply/model"
 	"testing"
 )
-
-var (
-	dao      *Dao
-	SourceId = int64(1)
-	TypeId   = model.NOTE_TYPE
-)
-
-func TestMain(m *testing.M) {
-	dao = NewDao(config.Conf)
-	os.Exit(m.Run())
-}
 
 // func Test_AddReply(t *testing.T) {
 // 	var err error
@@ -36,11 +23,13 @@ func TestMain(m *testing.M) {
 
 func Test_SelLimitReply(t *testing.T) {
 	var (
-		rs  []*model.Reply
-		err error
+		rs    []*model.Reply
+		start = int64(1)
+		limit = int64(20)
+		err   error
 	)
-	if rs, err = dao.SelLimitReply(context.Background(), SourceId, TypeId); err != nil {
-		t.Errorf("dao.SelLimitReply error(%v)", err)
+	if rs, err = d.SelLimitReply(context.Background(), SOURCEID, start, limit, TYPEID); err != nil {
+		t.Errorf("d.SelLimitReply error(%v)", err)
 	}
 	t.Log(rs)
 	return
@@ -51,8 +40,8 @@ func Test_SelAllReply(t *testing.T) {
 		rs  []*model.Reply
 		err error
 	)
-	if rs, err = dao.SelAllReply(context.Background(), SourceId, TypeId); err != nil {
-		t.Errorf("dao.SelAllReply error(%v)", err)
+	if rs, err = d.SelAllReply(context.Background(), SOURCEID, TYPEID); err != nil {
+		t.Errorf("d.SelAllReply error(%v)", err)
 	}
 	t.Log(rs)
 	return

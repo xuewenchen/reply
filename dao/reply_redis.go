@@ -16,12 +16,12 @@ func (d *Dao) replyIndexKey(sourceId int64, typeId int8) string {
 	return fmt.Sprintf(_replyIndexKey, sourceId, typeId)
 }
 
-func (d *Dao) ExpireReplyRedis(c context.Context, sourceId int64, typeId int8) (err error) {
+func (d *Dao) ExpireReplyRedis(c context.Context, sourceId int64, typeId int8) (ok bool, err error) {
 	conn := d.redis.Get(c)
 	defer conn.Close()
 	key := d.replyIndexKey(sourceId, typeId)
-	if _, err = conn.Do(key, d.expireRedis); err != nil {
-		log.Error("ExpireReplyRedis(%s) error(%v)", key, err)
+	if ok, err = redis.Bool(conn.Do("EXPIRE", key, d.expireRedis)); err != nil {
+		log.Error("conn.Do(EXPIRE %s) error(%v)", key, err)
 	}
 	return
 }
@@ -37,7 +37,7 @@ func (d *Dao) AddReplyRedis(c context.Context, sourceId int64, typeId int8, rs [
 		}
 	}
 	if err = conn.Send("EXPIRE", key, d.expireRedis); err != nil {
-		log.Error("conn.Send(EXPIRE,%s) error(%v)", key, err)
+		log.Error("conn.Send(EXPIRE, %s) error(%v)", key, err)
 		return
 	}
 	if err = conn.Flush(); err != nil {
@@ -63,6 +63,10 @@ func (d *Dao) ListReplyRedis(c context.Context, sourceId int64, typeId int8, sta
 	}
 	if err = conn.Send("ZCARD", key); err != nil {
 		log.Error("conn.Send(ZCARD %s) error(%v)", key, err)
+		return
+	}
+	if err = conn.Flush(); err != nil {
+		log.Error("conn.Flush error(%v)", err)
 		return
 	}
 	if ids, err = redis.Int64s(conn.Receive()); err != nil {

@@ -15,6 +15,7 @@ type Reply struct {
 	Comment  string    `json:"comment"`
 	ParentId int64     `json:"parent_id"`
 	Path     string    `json:"path"`
+	State    int8      `json:"state"`
 	Created  time.Time `json:"created"`
 	Updated  time.Time `json:"updated"`
 }

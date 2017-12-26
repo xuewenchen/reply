@@ -9,7 +9,7 @@ import (
 
 const (
 	_addReplySQL      = "INSERT INTO reply_%s (source_id,type_id,comment,parent_id,path)VALUES(?,?,?,?,?)"
-	_selLimitReplySQL = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESC LIMIT 0,100"
+	_selLimitReplySQL = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESC LIMIT ?,?"
 	_selAllReplySQL   = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=?"
 )
 
@@ -26,8 +26,8 @@ func (d *Dao) AddReply(c context.Context, reply *model.Reply) (affected int64, e
 	return result.LastInsertId()
 }
 
-func (d *Dao) SelLimitReply(c context.Context, sourceId int64, typeId int8) (rs []*model.Reply, err error) {
-	rows, err := d.db.Query(c, fmt.Sprintf(_selLimitReplySQL, d.sharding(sourceId)), sourceId, typeId)
+func (d *Dao) SelLimitReply(c context.Context, sourceId, start, limit int64, typeId int8) (rs []*model.Reply, err error) {
+	rows, err := d.db.Query(c, fmt.Sprintf(_selLimitReplySQL, d.sharding(sourceId)), sourceId, typeId, start, limit)
 	if err != nil {
 		log.Error("d.db.Query(%d,%d) error(%v)", sourceId, typeId, err)
 		return

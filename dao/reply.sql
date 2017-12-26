@@ -6,6 +6,7 @@ CREATE TABLE `reply_00` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -19,6 +20,7 @@ CREATE TABLE `reply_01` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -32,6 +34,7 @@ CREATE TABLE `reply_02` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -45,6 +48,7 @@ CREATE TABLE `reply_03` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -59,6 +63,7 @@ CREATE TABLE `reply_04` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -72,6 +77,7 @@ CREATE TABLE `reply_05` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -85,6 +91,7 @@ CREATE TABLE `reply_06` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -98,6 +105,7 @@ CREATE TABLE `reply_07` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -111,6 +119,7 @@ CREATE TABLE `reply_08` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
@@ -124,6 +133,7 @@ CREATE TABLE `reply_09` (
   `comment` text NOT NULL COMMENT '内容',
   `parent_id` int(11) unsigned NOT NULL COMMENT '父级id',
   `path` text NOT NULL COMMENT '楼层关系',
+  `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
