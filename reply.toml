@@ -1,17 +1,17 @@
 [common]
-version = "1.0.0"
-env = "local"
-hostPort = "127.0.0.1:61001"
-family = "hello_service"
+    version = "1.0.0"
+    env = "local"
+    hostPort = "127.0.0.1:61001"
+    family = "reply_service"
 
 [log]
 dir = "./"
 
 [trace]
-addr = "http://127.0.0.1:9411/api/v1/spans"
-debug = false
-sameSpan = true
-traceID128Bit = true
+    addr = "http://127.0.0.1:9411/api/v1/spans"
+    debug = false
+    sameSpan = true
+    traceID128Bit = true
 
 [router]
     [router.indentify]
@@ -34,7 +34,7 @@ traceID128Bit = true
         writeTimeout = "100s"
 
 [grpc]
-    name = "hello_service"
+    name = "reply_service"
     addr = "0.0.0.1"
     port = 8004
     etcdAddr = "http://127.0.0.1:2379"
@@ -69,6 +69,6 @@ traceID128Bit = true
     idleTimeout = "7h"
 
 [reply]
-expireRedis="72h"
-expireMc="8h"
+    expireRedis="72h"
+    expireMc="8h"
 

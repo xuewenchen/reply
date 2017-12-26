@@ -16,7 +16,3 @@ func NewService(c *config.Config, db *mysql.DB) (s *service, err error) {
 	}
 	return
 }
-
-func Close() (err error) {
-	return svr.dao.Close()
-}

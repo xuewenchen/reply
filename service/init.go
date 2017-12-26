@@ -2,13 +2,14 @@ package service
 
 import (
 	"fmt"
+	"github.com/grpc-ecosystem/grpc-opentracing/go/otgrpc"
 	opentracing "github.com/opentracing/opentracing-go"
 	zipkin "github.com/openzipkin/zipkin-go-opentracing"
-	wonaming "github.com/wothing/wonaming/etcd"
 	"google.golang.org/grpc"
 	kitCfg "kit/config"
 	"kit/log"
 	pb "kit/model/example"
+	"kit/net/etcd"
 	"kit/net/httpsvr"
 	"kit/net/pprof"
 	"kit/net/router"
@@ -66,39 +67,33 @@ func initTrace(c *kitCfg.Trace, cf *kitCfg.Common) (err error) {
 	return
 }
 
-func EndTracing() {
-	if collector != nil {
-		collector.Close()
-	}
-}
-
-func UnRegisterEtcd() {
-	wonaming.UnRegister()
-}
-
 // rpc
 func runRpc(c *kitCfg.Grpc) (err error) {
 	listen, err := net.Listen("tcp", fmt.Sprintf("0.0.0.0:%d", c.Port))
 	if err != nil {
-		log.Error("RunRpc error(%v)", err)
+		log.Error("run rpc error(%v)", err)
 		return
 	} else {
-		log.Info("RunRpc success port:%d", c.Port)
+		log.Info("run rpc success port:%d", c.Port)
 	}
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		grpc.UnaryInterceptor(
+			otgrpc.OpenTracingServerInterceptor(tracer, otgrpc.LogPayloads()),
+		),
+	)
 	svr := &helloServer{}
 	pb.RegisterHelloServiceServer(s, svr)
 	// go rpc
 	go func() {
 		if err = s.Serve(listen); err != nil {
-			log.Error("runRpc fail error(%v)", err)
+			log.Error("run rpc fail error(%v)", err)
 			return
 		}
 	}()
 	// register to etcd
-	err = wonaming.Register(c.Name, c.Addr, c.Port, c.EtcdAddr, time.Second*10, 15)
+	err = etcd.Register(c.Name, c.Addr, c.Port, c.EtcdAddr, time.Second*10, 15)
 	if err != nil {
-		log.Error("wonaming.Register error(%v)", err)
+		log.Error("etcd register error(%v)", err)
 	}
 	return
 }
@@ -127,4 +122,15 @@ func runHttp(c *kitCfg.Mhttp, cr *kitCfg.Router) (err error) {
 		log.Info("RunOutterHttp success port:%d", c.Outter.Port)
 	}
 	return
+}
+
+// service exit need do this thing
+func EndTracing() {
+	if collector != nil {
+		collector.Close()
+	}
+}
+
+func UnRegisterEtcd() {
+	etcd.UnRegister()
 }

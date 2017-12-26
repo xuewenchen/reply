@@ -36,16 +36,3 @@ func NewDao(c *config.Config) (d *Dao) {
 	d.expireMc = int(time.Duration(c.Reply.ExpireMc) / time.Second)
 	return
 }
-
-func (d *Dao) Close() (err error) {
-	if err = d.db.Close(); err != nil {
-		log.Error("d.db.Close error(%v)", err)
-	}
-	if err = d.redis.Close(); err != nil {
-		log.Error("d.redis.Close error(%v)", err)
-	}
-	if err = d.mc.Close(); err != nil {
-		log.Error("d.mc.Close error(%v)", err)
-	}
-	return
-}

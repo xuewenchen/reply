@@ -33,7 +33,6 @@ func main() {
 		case syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL, syscall.SIGHUP, syscall.SIGQUIT:
 			log.Info("service end receive signal %v", s)
 			service.UnRegisterEtcd() // 从etcd注摘除这个节点
-			service.Close()          // 关闭资源
 			service.EndTracing()     // 关闭trace
 			return
 		default:
