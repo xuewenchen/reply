@@ -26,7 +26,32 @@ func (d *Dao) ExpireReplyRedis(c context.Context, sourceId int64, typeId int8) (
 	return
 }
 
-func (d *Dao) AddReplyRedis(c context.Context, sourceId int64, typeId int8, rs []*model.Reply) (err error) {
+func (d *Dao) AddReplyRedis(c context.Context, r *model.Reply) (err error) {
+	conn := d.redis.Get(c)
+	defer conn.Close()
+	key := d.replyIndexKey(r.SourceId, r.TypeId)
+	if err = conn.Send("ZADD", key, r.Created.Time().Unix(), r.Id); err != nil {
+		log.Error("conn.Send(ZADD %s, %d, %d) error(%v)", key, r.Created.Time().Unix(), r.Id, err)
+		return
+	}
+	if err = conn.Send("EXPIRE", key, d.expireRedis); err != nil {
+		log.Error("conn.Send(EXPIRE, %s) error(%v)", key, err)
+		return
+	}
+	if err = conn.Flush(); err != nil {
+		log.Error("conn.Flush(%s) error(%v)", key, err)
+		return
+	}
+	for i := 0; i < 2; i++ {
+		if _, err = conn.Receive(); err != nil {
+			log.Error("conn.Receive(%s) error(%v)", key, err)
+			return
+		}
+	}
+	return
+}
+
+func (d *Dao) AddReplysRedis(c context.Context, sourceId int64, typeId int8, rs []*model.Reply) (err error) {
 	conn := d.redis.Get(c)
 	defer conn.Close()
 	key := d.replyIndexKey(sourceId, typeId)

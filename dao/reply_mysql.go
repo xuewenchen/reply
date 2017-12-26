@@ -4,13 +4,15 @@ import (
 	"context"
 	"fmt"
 	"kit/log"
+	"kit/xstr"
 	"reply/model"
 )
 
 const (
-	_addReplySQL      = "INSERT INTO reply_%s (source_id,type_id,comment,parent_id,path)VALUES(?,?,?,?,?)"
-	_selLimitReplySQL = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESC LIMIT ?,?"
-	_selAllReplySQL   = "SELECT id,source_id,type_id,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=?"
+	_addReplySQL      = "INSERT INTO reply_%s (source_id,type_id,mid,comment,parent_id,path)VALUES(?,?,?,?,?,?)"
+	_selReplysSQL     = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND id IN(%s)"
+	_selLimitReplySQL = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? ORDER BY created DESC LIMIT ?,?"
+	_selAllReplySQL   = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=?"
 )
 
 func (d *Dao) sharding(id int64) string {
@@ -18,12 +20,29 @@ func (d *Dao) sharding(id int64) string {
 }
 
 func (d *Dao) AddReply(c context.Context, reply *model.Reply) (affected int64, err error) {
-	result, err := d.db.Exec(c, fmt.Sprintf(_addReplySQL, d.sharding(reply.SourceId)), reply.SourceId, reply.TypeId, reply.Comment, reply.ParentId, reply.Path)
+	result, err := d.db.Exec(c, fmt.Sprintf(_addReplySQL, d.sharding(reply.SourceId)), reply.SourceId, reply.TypeId, reply.Mid, reply.Comment, reply.ParentId, reply.Path)
 	if err != nil {
 		log.Error("d.db.Exec(%+v) error(%v)", reply, err)
 		return
 	}
 	return result.LastInsertId()
+}
+
+func (d *Dao) SelReplys(c context.Context, sourceId int64, typeId int8, ids []int64) (rs []*model.Reply, err error) {
+	rows, err := d.db.Query(c, fmt.Sprintf(_selReplysSQL, d.sharding(sourceId), xstr.JoinInts(ids)), sourceId, typeId)
+	if err != nil {
+		log.Error("d.db.Query(%d,%d) error(%v)", sourceId, typeId, err)
+		return
+	}
+	for rows.Next() {
+		r := &model.Reply{}
+		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Mid, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
+			log.Error("rows.Scan(%d,%d) rows.Scan error(%v)", sourceId, typeId, err)
+			return
+		}
+		rs = append(rs, r)
+	}
+	return
 }
 
 func (d *Dao) SelLimitReply(c context.Context, sourceId, start, limit int64, typeId int8) (rs []*model.Reply, err error) {
@@ -34,8 +53,8 @@ func (d *Dao) SelLimitReply(c context.Context, sourceId, start, limit int64, typ
 	}
 	for rows.Next() {
 		r := &model.Reply{}
-		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
-			log.Error("SelLimitReply(%d,%d) rows.Scan error(%v)", sourceId, typeId, err)
+		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Mid, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
+			log.Error("rows.Scan(%d,%d) rows.Scan error(%v)", sourceId, typeId, err)
 			return
 		}
 		rs = append(rs, r)
@@ -51,7 +70,7 @@ func (d *Dao) SelAllReply(c context.Context, sourceId int64, typeId int8) (rs []
 	}
 	for rows.Next() {
 		r := &model.Reply{}
-		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
+		if err = rows.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Mid, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
 			log.Error("rows.Scan(%d,%d) rows.Scan error(%v)", sourceId, typeId, err)
 			return
 		}

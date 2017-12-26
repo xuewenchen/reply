@@ -5,7 +5,8 @@ import (
 )
 
 func initInner(r *router.Router) {
-	r.VerifyGet("/x/internal/hello", hello)
+	r.VerifyGet("/x/internal/add", add)
+	r.VerifyGet("/x/internal/list", list)
 }
 
 func initOutter(r *router.Router) {

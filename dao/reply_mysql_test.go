@@ -6,20 +6,20 @@ import (
 	"testing"
 )
 
-// func Test_AddReply(t *testing.T) {
-// 	var err error
-// 	reply := &model.Reply{
-// 		SourceId: SourceId,
-// 		TypeId:   TypeId,
-// 		Comment:  "这是一段文字",
-// 		ParentId: int64(0),
-// 		Path:     "/",
-// 	}
-// 	if _, err = dao.AddReply(context.Background(), reply); err != nil {
-// 		t.Errorf("Test_AddReply fail error(%v)", err)
-// 	}
-// 	return
-// }
+func Test_AddReply(t *testing.T) {
+	var err error
+	reply := &model.Reply{
+		SourceId: SOURCEID,
+		TypeId:   TYPEID,
+		Comment:  "这是一段文字",
+		ParentId: int64(0),
+		Path:     "/",
+	}
+	if _, err = d.AddReply(context.Background(), reply); err != nil {
+		t.Errorf("Test_AddReply fail error(%v)", err)
+	}
+	return
+}
 
 func Test_SelLimitReply(t *testing.T) {
 	var (

@@ -1,6 +1,6 @@
-[2017/12/26 15:29:48 CST] [INFO] [main.main:22] service start
-[2017/12/26 15:29:48 CST] [INFO] [kit/net/pprof.Init:20] Run pprof success port:8000
-[2017/12/26 15:29:48 CST] [INFO] [reply/service.runHttp:106] RunInnerHttp success port:8002
-[2017/12/26 15:29:48 CST] [INFO] [reply/service.runHttp:117] RunOutterHttp success port:8003
-[2017/12/26 15:29:48 CST] [INFO] [reply/service.runRpc:76] run rpc success port:8004
-[2017/12/26 15:29:54 CST] [INFO] [main.main:34] service end receive signal interrupt
+[2017/12/26 15:42:59 CST] [INFO] [main.main:22] service start
+[2017/12/26 15:42:59 CST] [INFO] [kit/net/pprof.Init:20] Run pprof success port:8000
+[2017/12/26 15:42:59 CST] [INFO] [reply/service.runHttp:111] RunInnerHttp success port:8002
+[2017/12/26 15:42:59 CST] [INFO] [reply/service.runHttp:122] RunOutterHttp success port:8003
+[2017/12/26 15:42:59 CST] [INFO] [reply/service.runRpc:77] run rpc success port:8004
+[2017/12/26 15:43:09 CST] [INFO] [main.main:34] service end receive signal interrupt
