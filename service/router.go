@@ -4,10 +4,10 @@ import (
 	"kit/net/router"
 )
 
-func initOutter(r *router.Router) {
-	r.GuestGet("/x/outter/hello", hello)
+func initInner(r *router.Router) {
+	r.VerifyGet("/x/internal/hello", hello)
 }
 
-func initInner(r *router.Router) {
-	r.GuestGet("/x/internal/hello", hello)
+func initOutter(r *router.Router) {
+	r.GuestGet("/x/outter/hello", hello)
 }

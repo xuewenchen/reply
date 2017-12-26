@@ -10,3 +10,26 @@
 [2017/12/21 16:57:31 CST] [INFO] [kit/example/service.runHttp:150] RunOutterHttp success port:8003
 [2017/12/21 16:57:31 CST] [INFO] [kit/example/service.runRpc:109] RunRpc success port:8004
 [2017/12/21 16:57:55 CST] [INFO] [main.main:34] service end receive signal interrupt
+[2017/12/26 14:38:43 CST] [INFO] [main.main:22] service start
+[2017/12/26 14:38:43 CST] [INFO] [kit/net/pprof.Init:20] Run pprof success port:8000
+[2017/12/26 14:38:43 CST] [INFO] [reply/service.runHttp:116] RunInnerHttp success port:8002
+[2017/12/26 14:38:43 CST] [INFO] [reply/service.runHttp:127] RunOutterHttp success port:8003
+[2017/12/26 14:38:43 CST] [INFO] [reply/service.runRpc:86] RunRpc success port:8004
+[2017/12/26 14:41:17 CST] [INFO] [main.main:34] service end receive signal interrupt
+[2017/12/26 14:42:28 CST] [INFO] [main.main:22] service start
+[2017/12/26 14:42:28 CST] [INFO] [kit/net/pprof.Init:20] Run pprof success port:8000
+[2017/12/26 14:42:28 CST] [INFO] [reply/service.runHttp:116] RunInnerHttp success port:8002
+[2017/12/26 14:42:28 CST] [INFO] [reply/service.runHttp:127] RunOutterHttp success port:8003
+[2017/12/26 14:42:28 CST] [INFO] [reply/service.runRpc:86] RunRpc success port:8004
+[2017/12/26 14:42:32 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:34 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:54 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:55 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:55 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:55 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:55 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:55 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:55 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:56 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:42:56 CST] [EROR] [kit/service/identify.(*Service).Verify:41] ts() is empty
+[2017/12/26 14:43:03 CST] [INFO] [main.main:34] service end receive signal interrupt

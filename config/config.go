@@ -12,16 +12,14 @@ import (
 type Config struct {
 	Common   *config.Common
 	Log      *config.Log
+	Router   *config.Router
 	Mysql    *config.Mysql
 	Redis    *config.Redis
 	Memcache *config.Memcache
-
-	Grpc  *config.Grpc
-	Mhttp *config.Mhttp
-
-	// trace
-	Trace *config.Trace
-	Reply *Reply
+	Grpc     *config.Grpc
+	Mhttp    *config.Mhttp
+	Trace    *config.Trace
+	Reply    *Reply
 }
 
 type Reply struct {

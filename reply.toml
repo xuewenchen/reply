@@ -13,6 +13,12 @@ debug = false
 sameSpan = true
 traceID128Bit = true
 
+[router]
+    [router.indentify]
+        [router.indentify.app]
+            key = "abc"
+            secret = "abc123"
+
 [mhttp]
     [mhttp.pprof]
         port = 8000

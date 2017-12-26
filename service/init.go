@@ -36,7 +36,7 @@ func Run(c *config.Config) (err error) {
 	}
 
 	// run http
-	if err = runHttp(c.Mhttp); err != nil {
+	if err = runHttp(c.Mhttp, c.Router); err != nil {
 		return
 	}
 
@@ -104,10 +104,10 @@ func runRpc(c *kitCfg.Grpc) (err error) {
 }
 
 // http
-func runHttp(c *kitCfg.Mhttp) (err error) {
+func runHttp(c *kitCfg.Mhttp, cr *kitCfg.Router) (err error) {
 	// internal
 	inMux := http.NewServeMux()
-	inRou := router.NewRouter(inMux)
+	inRou := router.NewRouter(cr, inMux)
 	initInner(inRou)
 	if err = httpsvr.RunHttp(c.Inner, inMux); err != nil {
 		log.Error("httpsvr.RunHttp error(%v)", err)
@@ -118,7 +118,7 @@ func runHttp(c *kitCfg.Mhttp) (err error) {
 
 	// outter
 	outMux := http.NewServeMux()
-	outRou := router.NewRouter(outMux)
+	outRou := router.NewRouter(cr, outMux)
 	initOutter(outRou)
 	if err = httpsvr.RunHttp(c.Outter, outMux); err != nil {
 		log.Error("RunOutterHttp error(%v)", err)
