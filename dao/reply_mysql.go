@@ -9,7 +9,9 @@ import (
 )
 
 const (
-	_addReplySQL      = "INSERT INTO reply_%s (source_id,type_id,mid,comment,parent_id,path)VALUES(?,?,?,?,?,?)"
+	// add
+	_addReplySQL = "INSERT INTO reply_%s (source_id,type_id,mid,comment,parent_id,path)VALUES(?,?,?,?,?,?)"
+	// select
 	_selReplysSQL     = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND state=0 AND id IN(%s)"
 	_selLimitReplySQL = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND state=0 ORDER BY created DESC LIMIT ?,?"
 	_selAllReplySQL   = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND state=0"

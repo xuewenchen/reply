@@ -9,13 +9,13 @@ import (
 )
 
 func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
-	// db
 	var affected int64
 	if affected, err = s.dao.AddReply(c, reply); err != nil {
 		return
 	}
 	reply.Id = affected
 	reply.Created = xtime.Time(time.Now().Unix())
+	// change cache
 	s.changeCh.Save(func() {
 		var (
 			ok  bool
@@ -30,7 +30,7 @@ func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
 			}
 		}
 		if err = s.dao.AddReplyMc(ctx, reply); err != nil {
-
+			return
 		}
 	})
 	return
@@ -70,7 +70,6 @@ func (s *service) List(c context.Context, sourceId int64, typeId int8, pn, ps in
 	if count < start {
 		return
 	}
-	// if redis not has
 	if rs, err = s.dao.SelLimitReply(c, sourceId, typeId, start, end); err != nil {
 		return
 	}
