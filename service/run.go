@@ -81,8 +81,8 @@ func runRpc(c *kitCfg.Grpc) (err error) {
 			otgrpc.OpenTracingServerInterceptor(tracer, otgrpc.LogPayloads()),
 		),
 	)
-	svr := &helloServer{}
-	pb.RegisterHelloServiceServer(s, svr)
+	servi := &helloServer{svr: svr}
+	pb.RegisterHelloServiceServer(s, servi)
 	// go rpc
 	go func() {
 		if err = s.Serve(listen); err != nil {
