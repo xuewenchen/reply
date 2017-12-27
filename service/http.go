@@ -37,25 +37,21 @@ func add(c context.Context) {
 		res["code"] = ecode.RequestErr
 		return
 	}
-
 	if sourceId, err = strconv.ParseInt(sourceIdStr, 10, 64); err != nil {
 		log.Error("strconv.ParseInt(%s) error(%v)", sourceIdStr, err)
 		res["code"] = ecode.RequestErr
 		return
 	}
-
 	if typeId, err = strconv.ParseInt(typeIdStr, 10, 64); err != nil {
 		log.Error("strconv.ParseInt(%s) error(%v)", typeIdStr, err)
 		res["code"] = ecode.RequestErr
 		return
 	}
-
 	if parentId, err = strconv.ParseInt(parentIdStr, 10, 64); err != nil {
 		log.Error("strconv.ParseInt(%s) error(%v)", parentIdStr, err)
 	} else {
 		parentId = 0
 	}
-
 	reply := &model.Reply{
 		SourceId: sourceId,
 		TypeId:   int8(typeId),

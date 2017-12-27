@@ -41,7 +41,7 @@ func (s *service) List(c context.Context, sourceId int64, typeId int8, pn, ps in
 	var (
 		ok    bool
 		ids   []int64
-		start = pn * ps
+		start = (pn - 1) * ps
 		end   = start + ps
 	)
 	if ok, err = s.dao.ExpireReplyRedis(c, sourceId, typeId); err != nil {

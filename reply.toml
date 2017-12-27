@@ -5,7 +5,7 @@
     family = "reply_service"
 
 [log]
-dir = "./"
+    dir = "./"
 
 [trace]
     addr = "http://127.0.0.1:9411/api/v1/spans"
