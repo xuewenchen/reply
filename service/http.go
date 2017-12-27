@@ -109,7 +109,9 @@ func list(c context.Context) {
 		return
 	}
 	res["code"] = err
-	res["data"] = rs
-	res["count"] = count
+	res["data"] = map[string]interface{}{
+		"rs":    rs,
+		"count": count,
+	}
 	return
 }

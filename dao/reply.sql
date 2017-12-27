@@ -10,7 +10,10 @@ CREATE TABLE `reply_00` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_01`;
@@ -25,7 +28,10 @@ CREATE TABLE `reply_01` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_02`;
@@ -40,7 +46,10 @@ CREATE TABLE `reply_02` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_03`;
@@ -55,7 +64,10 @@ CREATE TABLE `reply_03` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 
@@ -71,7 +83,10 @@ CREATE TABLE `reply_04` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_05`;
@@ -86,7 +101,10 @@ CREATE TABLE `reply_05` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_06`;
@@ -101,7 +119,10 @@ CREATE TABLE `reply_06` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_07`;
@@ -116,7 +137,10 @@ CREATE TABLE `reply_07` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_08`;
@@ -131,7 +155,10 @@ CREATE TABLE `reply_08` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';
 
 DROP TABLE IF EXISTS `reply_09`;
@@ -146,5 +173,8 @@ CREATE TABLE `reply_09` (
   `state` tinyint(4) unsigned DEFAULT 0 NOT NULL COMMENT '状态',
   `created` timestamp DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  INDEX source_id_type_id_state (`source_id`,`type_id`,`state`),
+  INDEX created (`created`),
+  INDEX updated (`updated`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '评论表';

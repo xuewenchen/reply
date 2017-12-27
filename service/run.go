@@ -27,6 +27,11 @@ var (
 )
 
 func Run(c *config.Config) (err error) {
+	// get service
+	if svr, err = NewService(config.Conf); err != nil {
+		return
+	}
+
 	if err = initTrace(c.Trace, c.Common); err != nil {
 		return
 	}
@@ -133,4 +138,8 @@ func EndTracing() {
 
 func UnRegisterEtcd() {
 	etcd.UnRegister()
+}
+
+func CloseService() {
+	svr.Close()
 }

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"kit/log"
 	"kit/xstr"
@@ -12,6 +13,7 @@ const (
 	// add
 	_addReplySQL = "INSERT INTO reply_%s (source_id,type_id,mid,comment,parent_id,path)VALUES(?,?,?,?,?,?)"
 	// select
+	_selReplySQL      = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE id=? AND state=0"
 	_selReplysSQL     = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND state=0 AND id IN(%s)"
 	_selLimitReplySQL = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND state=0 ORDER BY created DESC LIMIT ?,?"
 	_selAllReplySQL   = "SELECT id,source_id,type_id,mid,comment,parent_id,path,created FROM reply_%s WHERE source_id=? AND type_id=? AND state=0"
@@ -29,6 +31,20 @@ func (d *Dao) AddReply(c context.Context, reply *model.Reply) (affected int64, e
 		return
 	}
 	return result.LastInsertId()
+}
+
+func (d *Dao) SelReply(c context.Context, sourceId, id int64) (r *model.Reply, err error) {
+	row := d.db.QueryRow(c, fmt.Sprintf(_selReplySQL, d.sharding(sourceId)), id)
+	r = &model.Reply{}
+	if err = row.Scan(&r.Id, &r.SourceId, &r.TypeId, &r.Mid, &r.Comment, &r.ParentId, &r.Path, &r.Created); err != nil {
+		if err == sql.ErrNoRows {
+			r = nil
+			err = nil
+		} else {
+			log.Error("row.Scan(%d,%d) error(%v)", sourceId, id, err)
+		}
+	}
+	return
 }
 
 func (d *Dao) SelReplys(c context.Context, sourceId int64, typeId int8, ids []int64) (rs []*model.Reply, err error) {
@@ -83,7 +99,7 @@ func (d *Dao) SelAllReply(c context.Context, sourceId int64, typeId int8) (rs []
 }
 
 func (d *Dao) CountReply(c context.Context, sourceId int64, typeId int8) (count int, err error) {
-	row := d.db.QueryRow(c, fmt.Sprintf(_selAllReplySQL, d.sharding(sourceId)), sourceId, typeId)
+	row := d.db.QueryRow(c, fmt.Sprintf(_countReplySQL, d.sharding(sourceId)), sourceId, typeId)
 	if err = row.Scan(&count); err != nil {
 		log.Error("row.Scan(%d,%d) error(%v)", sourceId, typeId, err)
 	}

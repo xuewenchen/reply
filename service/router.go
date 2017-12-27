@@ -10,5 +10,6 @@ func initInner(r *router.Router) {
 }
 
 func initOutter(r *router.Router) {
-	r.GuestGet("/x/outter/hello", hello)
+	r.GuestGet("/x/outter/add", add)
+	r.GuestGet("/x/outter/list", list)
 }

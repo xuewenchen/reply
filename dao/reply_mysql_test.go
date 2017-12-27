@@ -25,7 +25,7 @@ func Test_AddReply(t *testing.T) {
 func Test_SelLimitReply(t *testing.T) {
 	var (
 		rs    []*model.Reply
-		start = 1
+		start = 0
 		limit = 20
 		err   error
 	)
@@ -51,7 +51,7 @@ func Test_SelAllReply(t *testing.T) {
 func Test_SelReplys(t *testing.T) {
 	var (
 		rs  []*model.Reply
-		ids = []int64{1, 2}
+		ids = []int64{1, 2, 3}
 		err error
 	)
 	if rs, err = d.SelReplys(context.Background(), SOURCEID, TYPEID, ids); err != nil {
@@ -70,5 +70,18 @@ func Test_CountReply(t *testing.T) {
 		t.Errorf("d.CountReply error(%v)", err)
 	}
 	t.Log(count)
+	return
+}
+
+func Test_SelReply(t *testing.T) {
+	var (
+		r   *model.Reply
+		id  = int64(1)
+		err error
+	)
+	if r, err = d.SelReply(context.Background(), SOURCEID, id); err != nil {
+		t.Errorf("d.SelReplys error(%v)", err)
+	}
+	t.Log(r)
 	return
 }

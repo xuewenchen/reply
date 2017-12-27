@@ -2,18 +2,39 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"kit/ecode"
+	"kit/log"
 	xtime "kit/time"
 	"kit/xstr"
 	"reply/model"
 	"time"
 )
 
+var (
+	// 防止缓存穿透的空列表
+	_emptyRs = &model.Reply{Id: 0}
+)
+
 func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
-	var affected int64
-	if affected, err = s.dao.AddReply(c, reply); err != nil {
+	if reply.ParentId != 0 {
+		var parentReply *model.Reply
+		if parentReply, err = s.getReply(c, reply.SourceId, reply.ParentId, reply.TypeId); err != nil {
+			return
+		}
+		if parentReply == nil {
+			err = ecode.ReplyNotExist
+			return
+		} else {
+			reply.Path = parentReply.Path + fmt.Sprintf("%d", parentReply.Id) + ","
+		}
+	}
+
+	var insertId int64
+	if insertId, err = s.dao.AddReply(c, reply); err != nil {
 		return
 	}
-	reply.Id = affected
+	reply.Id = insertId
 	reply.Created = xtime.Time(time.Now().Unix())
 	// change cache
 	s.changeCh.Save(func() {
@@ -94,9 +115,8 @@ func (s *service) loadReply(sourceId int64, typeId int8) (err error) {
 	if rs, err = s.dao.SelAllReply(ctx, sourceId, typeId); err != nil {
 		return
 	}
-	// 没有数据塞一个空的
 	if len(rs) == 0 {
-		if err = s.dao.AddReplyRedis(ctx, &model.Reply{Id: 0}); err != nil {
+		if err = s.dao.AddReplyRedis(ctx, _emptyRs); err != nil {
 			return
 		}
 		return
@@ -118,7 +138,18 @@ func (s *service) getReplyMap(c context.Context, rs []*model.Reply, sourceId int
 		allRsMap = make(map[int64]*model.Reply, len(rs))
 	)
 	for _, r := range rs {
-		tempIds, _ := xstr.SplitInts(r.Path)
+		var (
+			tempIds []int64
+			path    string
+		)
+		if r.Path != "" {
+			path = r.Path
+			path = path[:len(path)-1]
+			if tempIds, err = xstr.SplitInts(path); err != nil {
+				log.Error("xstr.SplitInts(%s) error(%v)", path, err)
+				return
+			}
+		}
 		r.Rids = tempIds
 		for _, id := range tempIds {
 			if _, ok := allIdMap[id]; !ok {
@@ -166,6 +197,26 @@ func (s *service) getReplys(c context.Context, sourceId int64, typeId int8, ids 
 				}
 			})
 		}
+	}
+	return
+}
+
+func (s *service) getReply(c context.Context, sourceId, id int64, typeId int8) (r *model.Reply, err error) {
+	if r, err = s.dao.GetReplyMc(c, sourceId, id, typeId); err != nil {
+		return
+	}
+	if r != nil && r.Id != 0 {
+		return
+	}
+	if r, err = s.dao.SelReply(c, sourceId, id); err != nil {
+		return
+	}
+	if r != nil {
+		s.changeCh.Save(func() {
+			if err = s.dao.AddReplyMc(c, r); err != nil {
+				return
+			}
+		})
 	}
 	return
 }

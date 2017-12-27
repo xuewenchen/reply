@@ -34,6 +34,7 @@ func main() {
 			log.Info("service end receive signal %v", s)
 			service.UnRegisterEtcd() // 从etcd注摘除这个节点
 			service.EndTracing()     // 关闭trace
+			service.CloseService()   // 关闭service，channel等
 			return
 		default:
 			log.Info("other")
