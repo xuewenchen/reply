@@ -16,8 +16,6 @@ func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
 	}
 	reply.Id = affected
 	reply.Created = xtime.Time(time.Now().Unix())
-
-	// cache
 	s.changeCh.Save(func() {
 		var (
 			ok  bool
@@ -54,7 +52,7 @@ func (s *service) List(c context.Context, sourceId int64, typeId int8, pn, ps in
 		if ids, count, err = s.dao.ListReplyRedis(c, sourceId, typeId, start, end-1); err != nil {
 			return
 		}
-		if len(ids) == 0 {
+		if len(ids) == 0 || (len(ids) == 1 && ids[0] == 0) {
 			return
 		}
 		if rs, err = s.getReplys(c, sourceId, typeId, ids); err != nil {
@@ -68,7 +66,7 @@ func (s *service) List(c context.Context, sourceId int64, typeId int8, pn, ps in
 	if count, err = s.dao.CountReply(c, sourceId, typeId); err != nil {
 		return
 	}
-	// 越界
+	// start越界
 	if count < start {
 		return
 	}
@@ -82,7 +80,7 @@ func (s *service) List(c context.Context, sourceId int64, typeId int8, pn, ps in
 	if err = s.getReplyMap(c, rs, sourceId, typeId); err != nil {
 		return
 	}
-	// cache全部h操作
+	// cache回源
 	s.loadCh.Save(func() {
 		s.loadReply(sourceId, typeId)
 	})
@@ -104,7 +102,6 @@ func (s *service) loadReply(sourceId int64, typeId int8) (err error) {
 		}
 		return
 	}
-	// 有数据
 	if err = s.dao.AddReplysRedis(ctx, sourceId, typeId, rs); err != nil {
 		return
 	}
