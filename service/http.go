@@ -10,9 +10,7 @@ import (
 
 func hello(c context.Context) {
 	res := c.Result()
-	r, err := svr.Get(c, int64(1))
-	res["code"] = err
-	res["data"] = r
+	res["data"] = "hello"
 	return
 }
 
@@ -61,6 +59,7 @@ func add(c context.Context) {
 	reply := &model.Reply{
 		SourceId: sourceId,
 		TypeId:   int8(typeId),
+		Mid:      mid,
 		Comment:  comment,
 		ParentId: parentId,
 	}
@@ -109,10 +108,12 @@ func list(c context.Context) {
 		res["code"] = ecode.RequestErr
 		return
 	}
-	if rs, count, err = svr.List(c, sourceId, typeId, int(pn), int(ps)); err != nil {
+	if rs, count, err = svr.List(c, sourceId, int8(typeId), int(pn), int(ps)); err != nil {
 		res["code"] = err
 		return
 	}
+	res["code"] = err
 	res["data"] = rs
+	res["count"] = count
 	return
 }

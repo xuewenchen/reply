@@ -17,6 +17,22 @@ func (d *Dao) mcKey(sourceId, replyId int64, typeId int8) string {
 	return fmt.Sprintf(_replyKey, sourceId, typeId, replyId)
 }
 
+func (d *Dao) AddReplyMc(c context.Context, r *model.Reply) (err error) {
+	conn := d.mc.Get(c)
+	defer conn.Close()
+	var bs []byte
+	if bs, err = json.Marshal(r); err != nil {
+		log.Error("json.Marshal(%+v) error(%v)", r, err)
+		return
+	}
+	key := d.mcKey(r.SourceId, r.Id, r.TypeId)
+	if err = conn.Store("set", key, bs, 0, int32(d.expireMc), 0); err != nil {
+		log.Error("conn.Store(set,%s,%s) error(%v)", key, bs, err)
+		return
+	}
+	return
+}
+
 func (d *Dao) AddReplysMc(c context.Context, sourceId int64, typeId int8, rs []*model.Reply) (err error) {
 	conn := d.mc.Get(c)
 	defer conn.Close()

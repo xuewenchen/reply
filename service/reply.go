@@ -2,17 +2,11 @@ package service
 
 import (
 	"context"
-	"kit/log"
 	xtime "kit/time"
 	"kit/xstr"
 	"reply/model"
 	"time"
 )
-
-func (s *service) Get(c context.Context, id int64) (r *model.Reply, err error) {
-
-	return
-}
 
 func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
 	// db
@@ -24,7 +18,7 @@ func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
 	reply.Created = xtime.Time(time.Now().Unix())
 
 	// cache
-	s.ch.Save(func() {
+	s.changeCh.Save(func() {
 		var (
 			ok  bool
 			ctx = context.Background()
@@ -37,6 +31,9 @@ func (s *service) Add(c context.Context, reply *model.Reply) (err error) {
 				return
 			}
 		}
+		if err = s.dao.AddReplyMc(ctx, reply); err != nil {
+
+		}
 	})
 	return
 }
@@ -46,59 +43,110 @@ func (s *service) List(c context.Context, sourceId int64, typeId int8, pn, ps in
 	var (
 		ok    bool
 		ids   []int64
-		start = ps * ps
+		start = pn * ps
 		end   = start + ps
 	)
 	if ok, err = s.dao.ExpireReplyRedis(c, sourceId, typeId); err != nil {
 		return
 	}
+	// if redis has
 	if ok {
 		if ids, count, err = s.dao.ListReplyRedis(c, sourceId, typeId, start, end-1); err != nil {
 			return
 		}
 		if len(ids) == 0 {
-			log.Error("List(%d,%d) len==0", sourceId, typeId)
 			return
 		}
 		if rs, err = s.getReplys(c, sourceId, typeId, ids); err != nil {
 			return
 		}
-		var (
-			allIds   []int64
-			allRs    []*model.Reply
-			allIdMap = make(map[int64]struct{}, len(rs))
-			allRsMap = make(map[int64]*model.Reply, len(rs))
-		)
-		for _, r := range rs {
-			tempIds, _ := xstr.SplitInts(r.Path)
-			r.Rids = tempIds
-			for _, id := range tempIds {
-				if _, ok := allIdMap[id]; !ok {
-					allIds = append(allIds, id)
-					allIdMap[id] = struct{}{}
-				}
-			}
-		}
-		if len(allIds) == 0 {
+		if err = s.getReplyMap(c, rs, sourceId, typeId); err != nil {
 			return
 		}
-		if allRs, err = s.getReplys(c, sourceId, typeId, allIds); err != nil {
-			return
-		}
-		for _, r := range allRs {
-			allRsMap[r.Id] = r
-		}
-		for _, r := range rs {
-			for _, id := range r.Rids {
-				if _, ok := allRsMap[id]; ok {
-					r.Rs = append(r.Rs, allRsMap[id])
-				}
-			}
-		}
-	} else {
-		// todo tomorrow
+		return
 	}
+	if count, err = s.dao.CountReply(c, sourceId, typeId); err != nil {
+		return
+	}
+	// 越界
+	if count < start {
+		return
+	}
+	// if redis not has
+	if rs, err = s.dao.SelLimitReply(c, sourceId, typeId, start, end); err != nil {
+		return
+	}
+	if len(rs) == 0 {
+		return
+	}
+	if err = s.getReplyMap(c, rs, sourceId, typeId); err != nil {
+		return
+	}
+	// cache全部h操作
+	s.loadCh.Save(func() {
+		s.loadReply(sourceId, typeId)
+	})
+	return
+}
 
+func (s *service) loadReply(sourceId int64, typeId int8) (err error) {
+	var (
+		ctx = context.Background()
+		rs  []*model.Reply
+	)
+	if rs, err = s.dao.SelAllReply(ctx, sourceId, typeId); err != nil {
+		return
+	}
+	// 没有数据塞一个空的
+	if len(rs) == 0 {
+		if err = s.dao.AddReplyRedis(ctx, &model.Reply{Id: 0}); err != nil {
+			return
+		}
+		return
+	}
+	// 有数据
+	if err = s.dao.AddReplysRedis(ctx, sourceId, typeId, rs); err != nil {
+		return
+	}
+	if err = s.dao.AddReplysMc(ctx, sourceId, typeId, rs); err != nil {
+		return
+	}
+	return
+}
+
+func (s *service) getReplyMap(c context.Context, rs []*model.Reply, sourceId int64, typeId int8) (err error) {
+	var (
+		allIds   []int64
+		allRs    []*model.Reply
+		allIdMap = make(map[int64]struct{}, len(rs))
+		allRsMap = make(map[int64]*model.Reply, len(rs))
+	)
+	for _, r := range rs {
+		tempIds, _ := xstr.SplitInts(r.Path)
+		r.Rids = tempIds
+		for _, id := range tempIds {
+			if _, ok := allIdMap[id]; !ok {
+				allIds = append(allIds, id)
+				allIdMap[id] = struct{}{}
+			}
+		}
+	}
+	if len(allIds) == 0 {
+		return
+	}
+	if allRs, err = s.getReplys(c, sourceId, typeId, allIds); err != nil {
+		return
+	}
+	for _, r := range allRs {
+		allRsMap[r.Id] = r
+	}
+	for _, r := range rs {
+		for _, id := range r.Rids {
+			if _, ok := allRsMap[id]; ok {
+				r.Rs = append(r.Rs, allRsMap[id])
+			}
+		}
+	}
 	return
 }
 
@@ -115,7 +163,13 @@ func (s *service) getReplys(c context.Context, sourceId int64, typeId int8, ids 
 			return
 		}
 		rs = append(rs, missRs...)
-
+		if len(missRs) > 0 {
+			s.changeCh.Save(func() {
+				if err = s.dao.AddReplysMc(context.Background(), sourceId, typeId, missRs); err != nil {
+					return
+				}
+			})
+		}
 	}
 	return
 }

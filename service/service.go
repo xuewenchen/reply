@@ -12,14 +12,16 @@ const (
 )
 
 type service struct {
-	dao *dao.Dao
-	ch  *channel.Cache
+	dao      *dao.Dao
+	changeCh *channel.Cache
+	loadCh   *channel.Cache
 }
 
 func NewService(c *config.Config, db *mysql.DB) (s *service, err error) {
 	s = &service{
-		dao: dao.NewDao(c),
-		ch:  channel.New(CHSIZE),
+		dao:      dao.NewDao(c),
+		changeCh: channel.New(CHSIZE),
+		loadCh:   channel.New(CHSIZE),
 	}
 	return
 }
