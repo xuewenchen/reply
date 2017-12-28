@@ -26,12 +26,12 @@ var (
 )
 
 func Run(c *config.Config) (err error) {
-	// get service
-	if svr, err = NewService(config.Conf); err != nil {
+	if err = initTrace(c.Trace, c.Common); err != nil {
 		return
 	}
 
-	if err = initTrace(c.Trace, c.Common); err != nil {
+	// get service
+	if svr, err = NewService(config.Conf, tracer); err != nil {
 		return
 	}
 
@@ -66,6 +66,7 @@ func initTrace(c *kitCfg.Trace, cf *kitCfg.Common) (err error) {
 	)
 	if err != nil {
 		log.Error("zipkin.NewTracer error(%v)", err)
+		return
 	}
 	opentracing.InitGlobalTracer(tracer)
 	return
@@ -128,17 +129,19 @@ func runHttp(c *kitCfg.Mhttp, cr *kitCfg.Router) (err error) {
 	return
 }
 
-// service exit need do this thing
+// end tracing
 func EndTracing() {
 	if collector != nil {
 		collector.Close()
 	}
 }
 
+// end etcd
 func UnRegisterEtcd() {
 	etcd.UnRegister()
 }
 
+// close service something
 func CloseService() {
 	svr.Close()
 }

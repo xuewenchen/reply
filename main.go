@@ -40,4 +40,5 @@ func main() {
 			log.Info("other")
 		}
 	}
+	return
 }

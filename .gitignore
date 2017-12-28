@@ -1,3 +1,6 @@
 reply
 !reply/
 .vscode
+info.log
+error.log
+warning.log

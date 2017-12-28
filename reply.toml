@@ -35,7 +35,7 @@
 
 [grpc]
     name = "reply_service"
-    addr = "0.0.0.1"
+    addr = "127.0.0.1"
     port = 8004
     etcdAddr = "http://127.0.0.1:2379"
 
