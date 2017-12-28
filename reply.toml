@@ -16,8 +16,8 @@
 [router]
     [router.indentify]
         [router.indentify.app]
-            key = "abc"
-            secret = "abc123"
+            appkey = "abc"
+            appsecret = "abc123"
 
 [mhttp]
     [mhttp.pprof]
