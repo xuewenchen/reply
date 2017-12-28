@@ -16,7 +16,6 @@ import (
 	"net"
 	"net/http"
 	"reply/config"
-	"time"
 )
 
 var (
@@ -96,7 +95,7 @@ func runRpc(c *kitCfg.Grpc) (err error) {
 		}
 	}()
 	// register to etcd
-	err = etcd.Register(c.Name, c.Addr, c.Port, c.EtcdAddr, time.Second*10, 15)
+	err = etcd.Register(c.Name, c.Addr, c.Port, c.EtcdAddr)
 	if err != nil {
 		log.Error("etcd register error(%v)", err)
 	}
